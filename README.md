@@ -1,8 +1,10 @@
 
-### Run tests
+### Run tests and coverage
 ```
 mvn test
 ```
+Coverage report at <workspace>/open-market/target/site/jacoco/index.html
+
 
 ### Setup the database
 ```

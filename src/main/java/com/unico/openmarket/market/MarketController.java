@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -37,8 +38,11 @@ public class MarketController {
     @PostMapping
     public ResponseEntity create(@RequestBody MarketDto marketDto){
         return service.create(marketDto)
-                .map(newMarket -> ResponseEntity.ok().body(newMarket))
-                .orElse(ResponseEntity.notFound().build());
+                .map(newMarket -> {
+                    URI location = URI.create(String.format("/markets/%s", marketDto.getCode()));
+                    return ResponseEntity.created(location).body(newMarket);
+                })
+                .orElse(ResponseEntity.unprocessableEntity().build());
     }
 
     @PutMapping(value="/{code}")
@@ -51,6 +55,6 @@ public class MarketController {
 
     @DeleteMapping(path ={"/{code}"})
     public ResponseEntity <?> delete(@PathVariable long code) {
-        return service.deleteByCode(code) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+        return service.deleteByCode(code) ? ResponseEntity.accepted().build() : ResponseEntity.notFound().build();
     }
 }

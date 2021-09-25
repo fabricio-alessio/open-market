@@ -43,7 +43,7 @@ CREATE TABLE public.market (
  region8 varchar(20) NOT NULL
 );
 
-CREATE INDEX market_district_id_idx ON public.market USING btree ("district_id");
-CREATE INDEX market_region5_idx ON public.market USING btree ("region5");
-CREATE INDEX market_name_idx ON public.market USING btree ("name");
-CREATE INDEX market_neighborhood_idx ON public.market USING btree ("neighborhood");
+CREATE INDEX market_district_id_idx ON public.market (district_id);
+CREATE INDEX market_region5_idx ON public.market (region5);
+CREATE INDEX market_name_idx ON public.market (name);
+CREATE INDEX market_neighborhood_idx ON public.market (neighborhood);
