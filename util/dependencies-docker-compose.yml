@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  postgres:
+    container_name: "open-market-pg"
+    image: postgis/postgis:9.6-3.1-alpine
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=local
+      - POSTGRES_USER=local
+      - POSTGRES_DB=open-market
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
