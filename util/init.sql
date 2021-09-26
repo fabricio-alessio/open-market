@@ -1,13 +1,6 @@
-DROP TABLE IF EXISTS public.person;
 DROP TABLE IF EXISTS public.market;
 DROP TABLE IF EXISTS public.district;
 DROP TABLE IF EXISTS public.sub_city_hall;
-
-CREATE TABLE public.person (
- id SERIAL CONSTRAINT pk_id_person PRIMARY KEY,
- first_name varchar(30) NOT NULL,
- last_name varchar(40) NOT NULL
-);
 
 CREATE TABLE public.district (
  id SERIAL CONSTRAINT pk_id_district PRIMARY KEY,
