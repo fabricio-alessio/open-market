@@ -9,20 +9,17 @@ CREATE TABLE public.person (
  last_name varchar(40) NOT NULL
 );
 
-
 CREATE TABLE public.district (
  id SERIAL CONSTRAINT pk_id_district PRIMARY KEY,
  code int4 NOT NULL UNIQUE,
  name varchar(50) NOT NULL
 );
 
-
 CREATE TABLE public.sub_city_hall (
  id SERIAL CONSTRAINT pk_id_sub_city_hall PRIMARY KEY,
  code int4 NOT NULL UNIQUE,
  name varchar(50) NOT NULL
 );
-
 
 CREATE TABLE public.market (
  id SERIAL CONSTRAINT pk_id_market PRIMARY KEY,
@@ -43,7 +40,4 @@ CREATE TABLE public.market (
  region8 varchar(20) NOT NULL
 );
 
-CREATE INDEX market_district_id_idx ON public.market (district_id);
-CREATE INDEX market_region5_idx ON public.market (region5);
-CREATE INDEX market_name_idx ON public.market (name);
-CREATE INDEX market_neighborhood_idx ON public.market (neighborhood);
+CREATE INDEX market_filter_idx ON public.market (district_id, region5, name, neighborhood);
