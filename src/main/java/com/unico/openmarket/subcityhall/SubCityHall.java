@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 
+import javax.validation.constraints.NotBlank;
+
 @Data
 @Builder
 public class SubCityHall {
