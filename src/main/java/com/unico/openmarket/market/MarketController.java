@@ -24,8 +24,9 @@ public class MarketController {
     }
 
     @GetMapping
-    public List findAll(){
-        return service.findAll();
+    public List findByFilters(){
+
+        return service.findByFilters(30, "Norte", "PARQUE", "PARQUE");
     }
 
     @GetMapping(path = {"/{code}"})

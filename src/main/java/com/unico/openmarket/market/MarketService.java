@@ -20,11 +20,14 @@ public class MarketService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MarketService.class);
 
     private MarketRepository repository;
+    private MarketFilterRepository filterRepository;
     private DistrictService districtService;
     private SubCityHallService subCityHallService;
 
-    public MarketService(MarketRepository repository, DistrictService districtService, SubCityHallService subCityHallService) {
+    public MarketService(MarketRepository repository, MarketFilterRepository filterRepository,
+                         DistrictService districtService, SubCityHallService subCityHallService) {
         this.repository = repository;
+        this.filterRepository = filterRepository;
         this.districtService = districtService;
         this.subCityHallService = subCityHallService;
     }
@@ -49,16 +52,27 @@ public class MarketService {
         return Optional.of(MarketAdapter.adaptMarketDto(market, districtDto, subCityHallDto));
     }
 
-    public List<MarketDto> findAll() {
-
-        return Collections.emptyList();
-    }
-
     public List<MarketDto> findByFilters(int districtId, String region5, String name, String neighborhood) {
 
-        final var markets = repository.findByFilters(districtId, region5, name, neighborhood);
+        LOGGER.debug("Find markets by filters: districtId [{}], region5 [{}], name[{}], neighborhood [{}]",
+                districtId, region5, name, neighborhood);
+        final var markets = filterRepository.findByFilters(
+                Optional.of(districtId),
+                Optional.of(region5),
+                Optional.of(name),
+                Optional.of(neighborhood));
+     /*   final var markets = filterRepository.findByFilters(
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty());*/
 
         return markets.stream().map(this::generateMarketDto).collect(Collectors.toList());
+    }
+
+    private String like(String value) {
+
+        return "%" + value + "%";
     }
 
     private MarketDto generateMarketDto(Market market) {
@@ -95,7 +109,7 @@ public class MarketService {
                     market.setAreap(marketDto.getAreap());
                     market.setDistrictId(district.getId());
                     market.setSubCityHallId(subCityHall.getId());
-                    market.setName(marketDto.getName());
+                    market.setMarketName(marketDto.getName());
                     market.setNeighborhood(marketDto.getNeighborhood());
                     market.setNumber(marketDto.getNumber());
                     market.setReference(marketDto.getReference());

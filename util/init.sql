@@ -28,7 +28,7 @@ CREATE TABLE public.market (
  lat int8 NOT NULL,
  setcens int8 NOT NULL,
  areap int8 NOT NULL,
- name varchar(50) NOT NULL,
+ market_name varchar(50) NOT NULL,
  registry varchar(20) NOT NULL,
  street varchar(50) NOT NULL,
  number varchar(20) NOT NULL,
@@ -40,4 +40,4 @@ CREATE TABLE public.market (
  region8 varchar(20) NOT NULL
 );
 
-CREATE INDEX market_filter_idx ON public.market (district_id, region5, name, neighborhood);
+CREATE INDEX market_filter_idx ON public.market (district_id, region5, market_name, neighborhood);

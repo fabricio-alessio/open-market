@@ -7,6 +7,8 @@ import com.unico.openmarket.market.MarketDto;
 import com.unico.openmarket.subcityhall.SubCityHall;
 import com.unico.openmarket.subcityhall.SubCityHallDto;
 
+import java.util.Map;
+
 public class EntityHelper {
 
     public static final long AREA_P = 83748374l;
@@ -20,8 +22,14 @@ public class EntityHelper {
     public static final String REGION5 = "Region 5";
     public static final String REGION8 = "Region 8";
     public static final String REGISTRY = "Registry";
-    private static final int NEW_DISTRICT_ID = 1;
-    private static final int NEW_SUB_CITY_HALL_ID = 2;
+    public static final int NEW_DISTRICT_ID = 1;
+    public static final int NEW_SUB_CITY_HALL_ID = 2;
+
+    public static final String FIELD_NAME = "NAME";
+    public static final String FIELD_DISTRICT_ID = "DISTRICT_ID";
+    public static final String FIELD_SUB_CITY_HALL_ID = "SUB_CITY_HALL_ID";
+    public static final String FIELD_REGION5 = "REGION5";
+    public static final String FIELD_NEIGHBORHOOD = "NEIGHBORHOOD";
 
     public static DistrictDto createNewDistrictDto(int code) {
 
@@ -67,7 +75,7 @@ public class EntityHelper {
                 .areap(AREA_P)
                 .lat(LAT)
                 .lng(LNG)
-                .name("Market " + code)
+                .marketName("Market " + code)
                 .neighborhood(NEIGHBORHOOD)
                 .street(STREET)
                 .number(NUMBER)
@@ -81,7 +89,29 @@ public class EntityHelper {
                 .build();
     }
 
-    public static District createNewDistrict(int code) {
+    public static Market createNewMarket(long code, Map<String, String> map) {
+
+
+        return Market.builder()
+                .code(code)
+                .areap(AREA_P)
+                .lat(LAT)
+                .lng(LNG)
+                .marketName(map.getOrDefault(FIELD_NAME, ""))
+                .neighborhood(map.getOrDefault(FIELD_NEIGHBORHOOD, NEIGHBORHOOD))
+                .street(STREET)
+                .number(NUMBER)
+                .reference(REFERENCE)
+                .region5(map.getOrDefault(FIELD_REGION5, REGION5))
+                .region8(REGION8)
+                .registry(REGISTRY)
+                .setcens(SETCENS)
+                .districtId(Integer.parseInt(map.getOrDefault(FIELD_DISTRICT_ID, "" + NEW_DISTRICT_ID)))
+                .subCityHallId(Integer.parseInt(map.getOrDefault(FIELD_SUB_CITY_HALL_ID, "" + NEW_SUB_CITY_HALL_ID)))
+                .build();
+    }
+
+    public static District createDistrict(int code) {
 
         return District.builder()
                 .id(NEW_DISTRICT_ID)
@@ -90,10 +120,26 @@ public class EntityHelper {
                 .build();
     }
 
-    public static SubCityHall createNewSubCityHall(int code) {
+    public static SubCityHall createSubCityHall(int code) {
 
         return SubCityHall.builder()
                 .id(NEW_SUB_CITY_HALL_ID)
+                .code(code)
+                .name("SubCityHall " + code)
+                .build();
+    }
+
+    public static District createNewDistrict(int code) {
+
+        return District.builder()
+                .code(code)
+                .name("District " + code)
+                .build();
+    }
+
+    public static SubCityHall createNewSubCityHall(int code) {
+
+        return SubCityHall.builder()
                 .code(code)
                 .name("SubCityHall " + code)
                 .build();

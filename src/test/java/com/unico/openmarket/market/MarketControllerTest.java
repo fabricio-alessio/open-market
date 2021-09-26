@@ -1,7 +1,6 @@
 package com.unico.openmarket.market;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -58,8 +57,8 @@ class MarketControllerTest {
         when(subCityHallRepository.findByCode(subCityHallCode)).thenReturn(Optional.empty());
 
         when(repository.save(Mockito.any())).thenReturn(EntityHelper.createNewMarket(marketCode));
-        when(districtRepository.save(Mockito.any())).thenReturn(EntityHelper.createNewDistrict(districtCode));
-        when(subCityHallRepository.save(Mockito.any())).thenReturn(EntityHelper.createNewSubCityHall(subCityHallCode));
+        when(districtRepository.save(Mockito.any())).thenReturn(EntityHelper.createDistrict(districtCode));
+        when(subCityHallRepository.save(Mockito.any())).thenReturn(EntityHelper.createSubCityHall(subCityHallCode));
 
         final var districtDto = EntityHelper.createNewDistrictDto(districtCode);
         final var subCityHallDto = EntityHelper.createNewSubCityHallDto(subCityHallCode);
@@ -84,11 +83,11 @@ class MarketControllerTest {
         final var market = EntityHelper.createNewMarket(marketCode);
         when(repository.findByCode(marketCode)).thenReturn(Optional.of(market));
 
-        when(districtRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(EntityHelper.createNewDistrict(districtCode)));
-        when(subCityHallRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(EntityHelper.createNewSubCityHall(subCityHallCode)));
+        when(districtRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(EntityHelper.createDistrict(districtCode)));
+        when(subCityHallRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(EntityHelper.createSubCityHall(subCityHallCode)));
 
-        when(districtRepository.findByCode(Mockito.anyLong())).thenReturn(Optional.of(EntityHelper.createNewDistrict(districtCode)));
-        when(subCityHallRepository.findByCode(Mockito.anyLong())).thenReturn(Optional.of(EntityHelper.createNewSubCityHall(subCityHallCode)));
+        when(districtRepository.findByCode(Mockito.anyLong())).thenReturn(Optional.of(EntityHelper.createDistrict(districtCode)));
+        when(subCityHallRepository.findByCode(Mockito.anyLong())).thenReturn(Optional.of(EntityHelper.createSubCityHall(subCityHallCode)));
 
         when(repository.save(Mockito.any())).thenReturn(EntityHelper.createNewMarket(marketCode));
 
@@ -115,11 +114,11 @@ class MarketControllerTest {
         final var market = EntityHelper.createNewMarket(marketCode);
         when(repository.findByCode(marketCode)).thenReturn(Optional.of(market));
 
-        when(districtRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(EntityHelper.createNewDistrict(districtCode)));
-        when(subCityHallRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(EntityHelper.createNewSubCityHall(subCityHallCode)));
+        when(districtRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(EntityHelper.createDistrict(districtCode)));
+        when(subCityHallRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(EntityHelper.createSubCityHall(subCityHallCode)));
 
-        when(districtRepository.findByCode(Mockito.anyLong())).thenReturn(Optional.of(EntityHelper.createNewDistrict(districtCode)));
-        when(subCityHallRepository.findByCode(Mockito.anyLong())).thenReturn(Optional.of(EntityHelper.createNewSubCityHall(subCityHallCode)));
+        when(districtRepository.findByCode(Mockito.anyLong())).thenReturn(Optional.of(EntityHelper.createDistrict(districtCode)));
+        when(subCityHallRepository.findByCode(Mockito.anyLong())).thenReturn(Optional.of(EntityHelper.createSubCityHall(subCityHallCode)));
 
         when(repository.save(Mockito.any())).thenReturn(EntityHelper.createNewMarket(marketCode));
 
@@ -190,8 +189,8 @@ class MarketControllerTest {
 
         final var market = EntityHelper.createNewMarket(marketCode);
         when(repository.findByCode(marketCode)).thenReturn(Optional.of(market));
-        when(districtRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(EntityHelper.createNewDistrict(districtCode)));
-        when(subCityHallRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(EntityHelper.createNewSubCityHall(subCityHallCode)));
+        when(districtRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(EntityHelper.createDistrict(districtCode)));
+        when(subCityHallRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(EntityHelper.createSubCityHall(subCityHallCode)));
 
         this.mockMvc.perform(MockMvcRequestBuilders
                 .get("/markets/{code}", marketCode))
@@ -220,7 +219,7 @@ class MarketControllerTest {
 
         final var market = EntityHelper.createNewMarket(marketCode);
         when(repository.findByCode(marketCode)).thenReturn(Optional.of(market));
-        when(districtRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(EntityHelper.createNewDistrict(districtCode)));
+        when(districtRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(EntityHelper.createDistrict(districtCode)));
         when(subCityHallRepository.findById(Mockito.anyInt())).thenReturn(Optional.empty());
 
         this.mockMvc.perform(MockMvcRequestBuilders

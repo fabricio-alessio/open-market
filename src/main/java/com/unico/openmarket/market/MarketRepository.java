@@ -12,16 +12,4 @@ import java.util.Optional;
 public interface MarketRepository extends CrudRepository<Market, Long> {
 
     Optional<Market> findByCode(long code);
-
-    @Query("select * from market m \n" +
-            "where\n" +
-            "  1 = 1\n" +
-            "  and m.district_id = :district_id\n" +
-            "  and m.region5 = :region5\n" +
-            "  and m.\"name\" like :name\n" +
-            "  and m.neighborhood like :neighborhood")
-    List<Market> findByFilters(@Param("district_id") Integer district_id,
-                               @Param("region5") String region5,
-                               @Param("name") String name,
-                               @Param("neighborhood") String neighborhood);
 }

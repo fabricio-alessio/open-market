@@ -14,7 +14,7 @@ public class Market {
     private long lat;
     private long setcens;
     private long areap;
-    private String name;
+    private String marketName;
     private String registry;
     private String street;
     private String number;
