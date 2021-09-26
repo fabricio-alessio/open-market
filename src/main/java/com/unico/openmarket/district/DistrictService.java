@@ -2,6 +2,7 @@ package com.unico.openmarket.district;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -28,5 +29,22 @@ public class DistrictService {
 
         return repository.findById(id)
                 .map(DistrictAdapter::adaptDistrictDto);
+    }
+
+    public Optional<District> findDistrictByName(String name) {
+
+        LOGGER.debug("Find by name {}", name);
+        return repository.findByName(name);
+    }
+
+    public Optional<Integer> findDistrictIdByName(String name) {
+
+        LOGGER.debug("Find districtId by name {}", name);
+        final var districtOpt = findDistrictByName(name);
+        if (districtOpt.isPresent()) {
+            return Optional.of(districtOpt.get().getId());
+        } else {
+            return Optional.empty();
+        }
     }
 }

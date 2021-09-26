@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import com.unico.openmarket.OpenMarketApplication;
-import com.unico.openmarket.commons.EmptyQueryParamException;
 import com.unico.openmarket.district.DistrictRepository;
 import com.unico.openmarket.subcityhall.SubCityHallRepository;
 import com.unico.openmarket.util.EntityHelper;
@@ -33,43 +32,46 @@ public class MarketFilterRepositoryTest {
     @Autowired
     private SubCityHallRepository subCityHallRepository;
 
-    @Test(expected = EmptyQueryParamException.class)
-    public void shouldThrowAnExceptionWhenTryToFilterWithOnlyEmptyParameters() {
+    @Test
+    public void shouldGetEmptyListWhenTryToFilterWithOnlyEmptyParameters() {
 
-        filterRepository.findByFilters(
+        final var markets = filterRepository.findByFilters(
                 Optional.empty(),
                 Optional.empty(),
                 Optional.empty(),
                 Optional.empty());
+
+        assertTrue(markets.isEmpty());
     }
 
     @Test
     public void shouldCreateAndRetrieveAMarketUsingAllFilters() {
 
+        final var marketName = "Feira da Mata";
         final var district = districtRepository.save(EntityHelper.createNewDistrict(2));
         final var subCityHall = subCityHallRepository.save(EntityHelper.createNewSubCityHall(3));
-        createAndSaveMarket(1, district.getId(), subCityHall.getId(), "Feira da Vila", "Vila Mariana", "Leste");
+        createAndSaveMarket(1, district.getId(), subCityHall.getId(), marketName, "Vila Mariana", "Leste");
 
         final var markets = filterRepository.findByFilters(
                 Optional.of(district.getId()),
                 Optional.of("Leste"),
-                Optional.of("Vila"),
+                Optional.of("Feira"),
                 Optional.of("Mariana"));
 
         assertTrue(markets.size() == 1);
         var foundMarket = markets.get(0);
-        assertEquals("Feira da Vila", foundMarket.getMarketName());
+        assertEquals(marketName, foundMarket.getMarketName());
     }
 
     @Test
     public void shouldCreateAndRetrieveMarketsWithNameLikeVilaUsingOneFilter() {
 
-        final var district = districtRepository.save(EntityHelper.createNewDistrict(2));
-        final var subCityHall = subCityHallRepository.save(EntityHelper.createNewSubCityHall(3));
+        final var district = districtRepository.save(EntityHelper.createNewDistrict(4));
+        final var subCityHall = subCityHallRepository.save(EntityHelper.createNewSubCityHall(5));
 
-        createAndSaveMarket(1, district.getId(), subCityHall.getId(), "Feira da Vila", "Vila Mariana", "Leste");
-        createAndSaveMarket(2, district.getId(), subCityHall.getId(), "Vila do Pastel", "Jabaquara", "Sul");
-        createAndSaveMarket(3, district.getId(), subCityHall.getId(), "Feira de Santana", "Jabaquara", "Sul");
+        createAndSaveMarket(2, district.getId(), subCityHall.getId(), "Feira da Vila", "Vila Mariana", "Leste");
+        createAndSaveMarket(3, district.getId(), subCityHall.getId(), "Vila do Pastel", "Jabaquara", "Sul");
+        createAndSaveMarket(4, district.getId(), subCityHall.getId(), "Feira de Santana", "Jabaquara", "Sul");
 
         final var markets = filterRepository.findByFilters(
                 Optional.empty(),

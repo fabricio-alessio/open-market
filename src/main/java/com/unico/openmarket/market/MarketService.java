@@ -1,5 +1,6 @@
 package com.unico.openmarket.market;
 
+import com.unico.openmarket.commons.EmptyQueryParamException;
 import com.unico.openmarket.commons.EntityNotFoundException;
 import com.unico.openmarket.district.DistrictAdapter;
 import com.unico.openmarket.district.DistrictService;
@@ -9,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -52,27 +52,27 @@ public class MarketService {
         return Optional.of(MarketAdapter.adaptMarketDto(market, districtDto, subCityHallDto));
     }
 
-    public List<MarketDto> findByFilters(int districtId, String region5, String name, String neighborhood) {
+    public List<MarketDto> findByFilters(Optional<String> districtNameOpt, Optional<String> region5Opt,
+                                         Optional<String> nameOpt, Optional<String> neighborhoodOpt) {
 
-        LOGGER.debug("Find markets by filters: districtId [{}], region5 [{}], name[{}], neighborhood [{}]",
-                districtId, region5, name, neighborhood);
-        final var markets = filterRepository.findByFilters(
-                Optional.of(districtId),
-                Optional.of(region5),
-                Optional.of(name),
-                Optional.of(neighborhood));
-     /*   final var markets = filterRepository.findByFilters(
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty());*/
+        LOGGER.debug("Find markets by filters: district [{}], region5 [{}], name[{}], neighborhood [{}]",
+                districtNameOpt, region5Opt, nameOpt, neighborhoodOpt);
+
+        if (districtNameOpt.isEmpty() &&
+                region5Opt.isEmpty() &&
+                nameOpt.isEmpty() &&
+                neighborhoodOpt.isEmpty()) {
+
+            throw new EmptyQueryParamException("No filter district, region5, name or neighborhood was informed");
+        }
+
+        final var districtIdOpt = districtNameOpt
+                .map(name -> districtService.findDistrictIdByName(name))
+                .orElse(Optional.empty());
+
+        final var markets = filterRepository.findByFilters(districtIdOpt, region5Opt, nameOpt, neighborhoodOpt);
 
         return markets.stream().map(this::generateMarketDto).collect(Collectors.toList());
-    }
-
-    private String like(String value) {
-
-        return "%" + value + "%";
     }
 
     private MarketDto generateMarketDto(Market market) {

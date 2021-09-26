@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface DistrictRepository extends CrudRepository<District, Integer> {
 
     Optional<District> findByCode(long code);
+
+    Optional<District> findByName(String name);
 }

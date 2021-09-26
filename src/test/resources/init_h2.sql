@@ -15,6 +15,8 @@ CREATE TABLE public.district (
  name varchar(50) NOT NULL
 );
 
+CREATE INDEX district_name_idx ON public.district (name);
+
 CREATE TABLE public.sub_city_hall (
  id SERIAL CONSTRAINT pk_id_sub_city_hall PRIMARY KEY,
  code int4 NOT NULL UNIQUE,

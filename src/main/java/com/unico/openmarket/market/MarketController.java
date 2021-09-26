@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping({"/markets"})
@@ -24,9 +26,17 @@ public class MarketController {
     }
 
     @GetMapping
-    public List findByFilters(){
+    public List findByFilters(
+            @RequestParam(required = false) String district,
+            @RequestParam(required = false) String region5,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String neighborhood){
 
-        return service.findByFilters(30, "Norte", "PARQUE", "PARQUE");
+        return service.findByFilters(
+                Optional.ofNullable(district),
+                Optional.ofNullable(region5),
+                Optional.ofNullable(name),
+                Optional.ofNullable(neighborhood));
     }
 
     @GetMapping(path = {"/{code}"})
