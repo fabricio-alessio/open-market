@@ -1,8 +1,10 @@
 package com.unico.openmarket.market;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import com.unico.openmarket.OpenMarketApplication;
+import com.unico.openmarket.commons.EmptyQueryParamException;
 import com.unico.openmarket.district.DistrictRepository;
 import com.unico.openmarket.subcityhall.SubCityHallRepository;
 import com.unico.openmarket.util.EntityHelper;
@@ -31,33 +33,62 @@ public class MarketFilterRepositoryTest {
     @Autowired
     private SubCityHallRepository subCityHallRepository;
 
+    @Test(expected = EmptyQueryParamException.class)
+    public void shouldThrowAnExceptionWhenTryToFilterWithOnlyEmptyParameters() {
+
+        filterRepository.findByFilters(
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty());
+    }
+
     @Test
-    public void should() {
+    public void shouldCreateAndRetrieveAMarketUsingAllFilters() {
 
-        int districtCode = 2;
-        int subCityHallCode = 3;
-        long marketCode = 2;
-        String marketName = "Feira da Vila";
-        String region5 = "Leste";
-        String neighborhood = "Vila Mariana";
+        final var district = districtRepository.save(EntityHelper.createNewDistrict(2));
+        final var subCityHall = subCityHallRepository.save(EntityHelper.createNewSubCityHall(3));
+        createAndSaveMarket(1, district.getId(), subCityHall.getId(), "Feira da Vila", "Vila Mariana", "Leste");
 
-        final var district = districtRepository.save(EntityHelper.createNewDistrict(districtCode));
-        final var subCityHall = subCityHallRepository.save(EntityHelper.createNewSubCityHall(subCityHallCode));
+        final var markets = filterRepository.findByFilters(
+                Optional.of(district.getId()),
+                Optional.of("Leste"),
+                Optional.of("Vila"),
+                Optional.of("Mariana"));
+
+        assertTrue(markets.size() == 1);
+        var foundMarket = markets.get(0);
+        assertEquals("Feira da Vila", foundMarket.getMarketName());
+    }
+
+    @Test
+    public void shouldCreateAndRetrieveMarketsWithNameLikeVilaUsingOneFilter() {
+
+        final var district = districtRepository.save(EntityHelper.createNewDistrict(2));
+        final var subCityHall = subCityHallRepository.save(EntityHelper.createNewSubCityHall(3));
+
+        createAndSaveMarket(1, district.getId(), subCityHall.getId(), "Feira da Vila", "Vila Mariana", "Leste");
+        createAndSaveMarket(2, district.getId(), subCityHall.getId(), "Vila do Pastel", "Jabaquara", "Sul");
+        createAndSaveMarket(3, district.getId(), subCityHall.getId(), "Feira de Santana", "Jabaquara", "Sul");
+
+        final var markets = filterRepository.findByFilters(
+                Optional.empty(),
+                Optional.empty(),
+                Optional.of("Vila"),
+                Optional.empty());
+
+        assertTrue(markets.size() == 2);
+    }
+
+    private Market createAndSaveMarket(long marketCode, int districtId, int subCityHallId, String marketName, String neighborhood, String region5) {
 
         final var market = EntityHelper.createNewMarket(marketCode,
-                Map.of(EntityHelper.FIELD_DISTRICT_ID, "" + district.getId(),
-                        EntityHelper.FIELD_SUB_CITY_HALL_ID, "" + subCityHall.getId(),
+                Map.of(EntityHelper.FIELD_DISTRICT_ID, "" + districtId,
+                        EntityHelper.FIELD_SUB_CITY_HALL_ID, "" + subCityHallId,
                         EntityHelper.FIELD_NAME, marketName,
                         EntityHelper.FIELD_NEIGHBORHOOD, neighborhood,
                         EntityHelper.FIELD_REGION5, region5));
 
-        crudRepository.save(market);
-        final var markets = filterRepository.findByFilters(
-                Optional.of(district.getId()),
-                Optional.of(region5),
-                Optional.of(marketName),
-                Optional.of(neighborhood));
-
-        assertTrue(markets.size() == 1);
+        return crudRepository.save(market);
     }
 }
